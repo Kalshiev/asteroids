@@ -1,24 +1,55 @@
 import pygame
+import sys
 from constants import *
+from player import Player
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
 
 def main():
     pygame.init()
+    clock = pygame.time.Clock()
     screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
+    # Pygame groups
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
+
+    Asteroid.containers = (asteroids, updatable, drawable)
+    AsteroidField.containers = updatable
+    asteroid_field = AsteroidField()
+
+    Player.containers = (updatable, drawable)
+
+    # Create a player with the Player class
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+
+    # Delta Time
+    dt = 0
+
+    # Game Loop
     while True:
         # Check if the user has closed the window to quit the game
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
         # Color the entire screen black
-        pygame.Surface.fill(screen, (0,0,0))
+        screen.fill("black")
+
+        for item in drawable:
+            item.draw(screen)
+
+        updatable.update(dt)
+
+        for asteroid in asteroids:
+            if asteroid.collision(player):
+                print("Game Over!")
+                sys.exit()
 
         # Refresh the screen
         pygame.display.flip()
-    
-    print("Starting Asteroids!")
-    print(f"Screen width: {SCREEN_WIDTH}")
-    print(f"Screen height: {SCREEN_HEIGHT}")
+        # Limit the game's framerate to 60FPS
+        dt = clock.tick(60) / 1000
 
 
 if __name__ == "__main__":
