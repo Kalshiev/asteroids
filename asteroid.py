@@ -7,15 +7,14 @@ class Asteroid(CircleShape):
         super().__init__(x, y, radius)
         self.rotation = 0
         self.coin = coin
+        self.vertex_list = []
 
     def rock(self):
-        forward = pygame.Vector2(0, 1).rotate(self.rotation)
-        right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
-        a = self.position + forward * self.radius
-        b = self.position - forward * self.radius - right
-        c = self.position - forward * self.radius + right
-        d = self.position + forward * self.radius + right
-        return [a, b, c, d]
+        rock_vertex_list = []
+        for i in self.vertex_list:
+            point = pygame.Vector2(0, 1).rotate(self.rotation + i)
+            rock_vertex_list.append(self.position + point * self.radius)
+        return rock_vertex_list
     
     def rotate(self, dt):
         if self.coin < 0.5:
@@ -42,6 +41,16 @@ class Asteroid(CircleShape):
 
             asteroid1 = Asteroid(self.position.x, self.position.y, new_radius, 0)
             asteroid1.velocity = angle1 * 1.2
+            new_vertex_list1 = []
+            for _ in self.vertex_list:
+                new_vertex_list1.append(random.randint(100,360))
+            new_vertex_list1.sort()
+            asteroid1.vertex_list = new_vertex_list1
 
             asteroid2 = Asteroid(self.position.x, self.position.y, new_radius, 1)
             asteroid2.velocity = angle2 * 1.2
+            new_vertex_list2 = []
+            for _ in self.vertex_list:
+                new_vertex_list2.append(random.randint(100,360))
+            new_vertex_list2.sort()
+            asteroid2.vertex_list = new_vertex_list2

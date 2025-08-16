@@ -36,6 +36,15 @@ class AsteroidField(pygame.sprite.Sprite):
         coin = random.randint(0,1)
         asteroid = Asteroid(position.x, position.y, radius, coin)
         asteroid.velocity = velocity
+        asteroid.vertex_list = self.generate_vertex_list()
+
+    def generate_vertex_list(self):
+        vertex_list = []
+        for _ in range(10):
+            vertex_list.append(random.randint(100,360))
+        vertex_list.sort()
+        return vertex_list
+
 
     def update(self, dt):
         self.spawn_timer += dt

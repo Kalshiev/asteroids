@@ -5,11 +5,16 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
+from utils import draw_text
+from config.fonts import POINT_FONT
 
 def main():
     pygame.init()
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
+
+    # Fonts
+    point_font = pygame.font.Font(POINT_FONT, 25)
 
     # Pygame groups
     updatable = pygame.sprite.Group()
@@ -30,6 +35,9 @@ def main():
     # Delta Time
     dt = 0
 
+    # Points counter
+    points = 0
+
     # Game Loop
     while True:
         # Check if the user has closed the window to quit the game
@@ -38,6 +46,8 @@ def main():
                 return
         # Color the entire screen black
         screen.fill("black")
+
+        draw_text(str(points), point_font, "white", screen, 50, 50)
 
         for item in drawable:
             item.draw(screen)
@@ -53,6 +63,7 @@ def main():
                 if asteroid.collision(shot):
                     asteroid.split()
                     shot.kill()
+                    points += 10
 
         # Refresh the screen
         pygame.display.flip()
